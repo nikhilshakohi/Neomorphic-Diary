@@ -1,0 +1,84 @@
+@keyframes expandDown {
+    from {
+        opacity: 0;
+        transform: translateX(200px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes neuPopUp {
+    0% {
+        box-shadow: none;
+        transform: scale(1);
+        opacity: 0;
+    }
+
+    50% {
+        box-shadow: none;
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    65% {
+        box-shadow:
+            10px 10px 20px var(--dark),
+            -10px -10px 20px var(--light);
+        transform: scale(1.05);
+    }
+
+    100% {
+        box-shadow:
+            8px 8px 16px var(--dark),
+            -8px -8px 16px var(--light);
+        transform: scale(1);
+    }
+}
+
+@keyframes neuPopDown {
+    0% {
+        box-shadow: none;
+        transform: scale(1);
+        opacity: 0;
+    }
+
+    50% {
+        box-shadow: none;
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    70% {
+        box-shadow:
+            inset 6px 6px 12px var(--dark),
+            inset -6px -6px 12px var(--light);
+        transform: scale(0.98);
+    }
+
+    100% {
+        box-shadow:
+            inset 3px 3px 6px var(--dark),
+            inset -3px -3px 6px var(--light);
+        transform: scale(1);
+    }
+}
+
+@keyframes slideUpEntry {
+    0% {
+        opacity: 0;
+        transform: translateY(500px);
+    }
+
+    50% {
+        opacity: 0;
+        transform: translateY(500px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

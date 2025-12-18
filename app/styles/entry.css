@@ -1,0 +1,48 @@
+.list {
+    background: var(--bg);
+    border-radius: 16px;
+    box-shadow: 8px 8px 16px var(--dark), -8px -8px 16px var(--light);
+    padding: 15px;
+    margin: 25px 0;
+    animation: slideUpEntry 2s ease-in-out;
+}
+
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-icon {
+    font-size: 30px;
+}
+
+
+/* Menu */
+.item-menu {
+    position: relative;
+}
+
+.item-menu button {
+    font-size: 20px;
+    line-height: 15px;
+}
+
+/* Popup */
+.menu-popup {
+    position: absolute;
+    right: 0;
+    top: 35px;
+    background: var(--bg);
+    border-radius: 16px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 6px 6px 6px var(--dark),
+        -2px -2px 6px var(--light);
+}
+
+.menu-popup button {
+    padding: 6px 10px;
+    margin: 5px;
+}
