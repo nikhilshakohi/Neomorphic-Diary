@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import "./../styles/header.css";
+
 const LIGHT = "light";
 const DARK = "dark";
 
 export default function Header() {
   const [theme, setTheme] = useState(DARK);
   const isDark = theme === DARK;
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const asd = () => {
@@ -34,8 +37,14 @@ export default function Header() {
         >
           {isDark ? "🌙" : "☀️"}
         </button>
-        <button>👤PROFILE</button>
-        <button className="danger-text">LOGOUT</button>
+        {user && (
+          <>
+            <button>👤PROFILE</button>
+            <button className="danger-text" onClick={logout}>
+              LOGOUT
+            </button>
+          </>
+        )}
       </div>
     </header>
   );

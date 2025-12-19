@@ -1,9 +1,33 @@
+import { useState } from "react";
 import "./../styles/auth.css";
 import useToggle from "../hooks/useToggle";
+import { useAuth } from "../context/AuthContext";
+import Alert from "../components/Alert";
 
 export default function Signup({ onSwitch }: { onSwitch: () => void }) {
   const [showPassword, togglePassword] = useToggle();
   const [showConfirm, toggleConfirm] = useToggle();
+
+  const { signup, loading } = useAuth();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSignup = async () => {
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    try {
+      await signup(name, email, password);
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  };
 
   return (
     <div className="section">
@@ -12,8 +36,31 @@ export default function Signup({ onSwitch }: { onSwitch: () => void }) {
 
         <div className="px-20">
           <div className="relative">
+            <span className="input-icon fadeIcon">🧑</span>
+            <input
+              className="authInput"
+              type="text"
+              placeholder="Your Name"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                setError("");
+              }}
+            />
+          </div>
+
+          <div className="relative">
             <span className="input-icon fadeIcon">📧</span>
-            <input className="authInput" type="email" placeholder="Email" />
+            <input
+              className="authInput"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError("");
+              }}
+            />
           </div>
 
           <div className="relative">
@@ -22,6 +69,11 @@ export default function Signup({ onSwitch }: { onSwitch: () => void }) {
               className="authInput"
               type={showPassword ? "text" : "password"}
               placeholder="Password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError("");
+              }}
             />
             <button
               type="button"
@@ -38,6 +90,11 @@ export default function Signup({ onSwitch }: { onSwitch: () => void }) {
               className="authInput"
               type={showConfirm ? "text" : "password"}
               placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => {
+                setConfirmPassword(e.target.value);
+                setError("");
+              }}
             />
             <button
               type="button"
@@ -48,9 +105,16 @@ export default function Signup({ onSwitch }: { onSwitch: () => void }) {
             </button>
           </div>
 
-          <div className="flex justify-between">
-            <button className="authButton">Create My Diary 🌱</button>
-            <button className="authButton">Start with Google 🌍</button>
+          {error && <Alert message={error} onClose={() => setError("")} />}
+
+          <div className="flex justify-between mt-4">
+            <button
+              className="authButton"
+              disabled={loading}
+              onClick={handleSignup}
+            >
+              {loading ? "Creating..." : "Create My Diary 🌱"}
+            </button>
           </div>
         </div>
 

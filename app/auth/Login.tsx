@@ -1,8 +1,24 @@
+import { useState } from "react";
 import "./../styles/auth.css";
 import useToggle from "../hooks/useToggle";
+import { useAuth } from "../context/AuthContext";
+import Alert from "../components/Alert";
 
 export default function Login({ onSwitch }: { onSwitch: () => void }) {
   const [showPassword, togglePassword] = useToggle();
+  const { login, loginWithGoogle, loading } = useAuth();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleLogin = async () => {
+    try {
+      await login(email, password);
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  };
 
   return (
     <div className="section">
@@ -12,7 +28,16 @@ export default function Login({ onSwitch }: { onSwitch: () => void }) {
         <div className="px-20">
           <div className="relative">
             <span className="input-icon fadeIcon">📧</span>
-            <input className="authInput" type="email" placeholder="Email" />
+            <input
+              className="authInput"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError("");
+              }}
+            />
           </div>
           <div className="relative">
             <span className="input-icon fadeIcon">🔒</span>
@@ -20,6 +45,11 @@ export default function Login({ onSwitch }: { onSwitch: () => void }) {
               className="authInput"
               type={showPassword ? "text" : "password"}
               placeholder="Password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError("");
+              }}
             />
             <button
               type="button"
@@ -30,9 +60,24 @@ export default function Login({ onSwitch }: { onSwitch: () => void }) {
             </button>
           </div>
 
-          <div className="flex justify-between">
-            <button className="authButton">Login 🚀</button>
-            <button className="authButton">Continue with Google 🌍</button>
+          {error && <Alert message={error} onClose={() => setError("")} />}
+
+          <div className="flex justify-between mt-4">
+            <button
+              className="authButton"
+              disabled={loading}
+              onClick={handleLogin}
+            >
+              {loading ? "Logging in..." : "Login 🚀"}
+            </button>
+
+            <button
+              className="authButton"
+              disabled={loading}
+              onClick={loginWithGoogle}
+            >
+              Continue with Google 🌍
+            </button>
           </div>
         </div>
         <div className="auth-switch">
