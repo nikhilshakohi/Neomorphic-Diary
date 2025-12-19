@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "./styles/animations.css";
 
+* {
+  transition: all 0.3s ease;
+}
+
 :root {
   --bg: #e0e0e0;
   --fg: hsl(0, 0%, 20%);
@@ -39,6 +43,10 @@ textarea {
   animation: neuPopDown 1.5s ease-in-out;
 }
 
+textarea {
+  caret-color: var(--fg);
+}
+
 button {
   cursor: pointer;
   font-weight: 600;
@@ -65,4 +73,10 @@ button:disabled {
 
 .danger-text {
   color: #f44336;
+}
+
+.card {
+  box-shadow: 8px 8px 16px var(--dark), -8px -8px 16px var(--light);
+  padding: 15px;
+  margin: auto;
 }

@@ -22,7 +22,7 @@ export default function Entry({ title, date, content }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="list">
+    <div className="card list">
       <div className="item-header">
         <div className="flex items-center gap-2">
           <div className="item-icon">🕘</div>

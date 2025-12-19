@@ -1,8 +1,6 @@
 .list {
     background: var(--bg);
     border-radius: 16px;
-    box-shadow: 8px 8px 16px var(--dark), -8px -8px 16px var(--light);
-    padding: 15px;
     margin: 25px 0;
     animation: slideUpEntry 2s ease-in-out;
 }

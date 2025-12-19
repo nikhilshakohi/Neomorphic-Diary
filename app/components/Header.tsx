@@ -1,22 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./../styles/header.css";
-
 const LIGHT = "light";
 const DARK = "dark";
-const CURRENT_THEME = LIGHT;
 
 export default function Header() {
-  const [theme, setTheme] = useState(CURRENT_THEME);
+  const [theme, setTheme] = useState(DARK);
   const isDark = theme === DARK;
 
-  function toggleTheme() {
-    const newTheme = theme === DARK ? LIGHT : DARK;
-    setTheme(newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme);
-  }
+  useEffect(() => {
+    const asd = () => {
+      const stored = localStorage.getItem("theme") || DARK;
+      setTheme(stored);
+      document.documentElement.setAttribute("data-theme", stored);
+    };
+    asd();
+  }, []);
 
+  function toggleTheme() {
+    const next = theme === DARK ? LIGHT : DARK;
+    setTheme(next);
+    localStorage.setItem("theme", next);
+    document.documentElement.setAttribute("data-theme", next);
+  }
   return (
     <header>
       <div className="text-2xl font-semibold">DIARY</div>
