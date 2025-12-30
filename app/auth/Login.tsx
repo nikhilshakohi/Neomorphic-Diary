@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import "./../styles/auth.css";
 import useToggle from "../hooks/useToggle";
 import { useAuth } from "../context/AuthContext";
@@ -11,6 +11,7 @@ export default function Login({ onSwitch }: { onSwitch: () => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const closeError = useCallback(() => setError(""), []);
 
   const handleLogin = async () => {
     try {
@@ -25,7 +26,7 @@ export default function Login({ onSwitch }: { onSwitch: () => void }) {
       <div className="card authCard">
         <h1 className="auth-title">👋 Welcome Back</h1>
 
-        <div className="px-20">
+        <div className="px-4 sm:px-20">
           <div className="relative">
             <span className="input-icon fadeIcon">📧</span>
             <input
@@ -60,7 +61,7 @@ export default function Login({ onSwitch }: { onSwitch: () => void }) {
             </button>
           </div>
 
-          {error && <Alert message={error} onClose={() => setError("")} />}
+          {error && <Alert message={error} onClose={closeError} />}
 
           <div className="flex justify-between mt-4">
             <button

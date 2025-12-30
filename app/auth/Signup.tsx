@@ -34,7 +34,7 @@ export default function Signup({ onSwitch }: { onSwitch: () => void }) {
       <div className="card authCard">
         <h1 className="auth-title">✨ Start Your Diary</h1>
 
-        <div className="px-20">
+        <div className="px-4 sm:px-20">
           <div className="relative">
             <span className="input-icon fadeIcon">🧑</span>
             <input

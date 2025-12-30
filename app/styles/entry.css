@@ -2,7 +2,7 @@
     background: var(--bg);
     border-radius: 16px;
     margin: 25px 0;
-    animation: slideUpEntry 2s ease-in-out;
+    animation: slideUpEntry 1s ease-in-out;
 }
 
 .item-header {
@@ -38,6 +38,7 @@
     flex-direction: column;
     box-shadow: 6px 6px 6px var(--dark),
         -2px -2px 6px var(--light);
+    z-index: 1;
 }
 
 .menu-popup button {

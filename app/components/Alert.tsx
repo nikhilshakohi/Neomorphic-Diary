@@ -7,7 +7,7 @@ type Props = {
   duration?: number;
 };
 
-export default function Alert({ message, onClose, duration = 7000 }: Props) {
+export default function Alert({ message, onClose, duration = 3500 }: Props) {
   useEffect(() => {
     const timer = setTimeout(onClose, duration);
     return () => clearTimeout(timer);

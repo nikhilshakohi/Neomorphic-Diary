@@ -32,7 +32,7 @@ button {
   border: 0;
   outline: 0;
   padding: 12px;
-  border-radius: 12px;
+  border-radius: 16px;
   background: var(--bg);
   color: var(--fg);
 }
@@ -41,6 +41,11 @@ input,
 textarea {
   box-shadow: inset 3px 3px 6px var(--dark), inset -3px -3px 6px var(--light);
   animation: neuPopDown 1.5s ease-in-out;
+}
+
+input[type="date"] {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 textarea {

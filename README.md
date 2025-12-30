@@ -31,5 +31,3 @@ Open `http://localhost:3000` to view the app.
 ## 🎯 Vision
 
 Built as a long-term personal diary with a focus on **privacy, simplicity, and aesthetics**, while being easy to extend with future features.
-
----

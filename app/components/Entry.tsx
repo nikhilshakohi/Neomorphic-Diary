@@ -1,13 +1,15 @@
-"use client";
-
-import { useState } from "react";
 import "./../styles/entry.css";
 import Content from "./Content";
 
 type Props = {
+  id: string;
   title: string;
   date: string;
   content: string;
+  onDelete: () => void;
+  onEdit: () => void;
+  menuOpen: boolean;
+  onMenuToggle: () => void;
 };
 
 const formatDate = (date: string) =>
@@ -18,9 +20,15 @@ const formatDate = (date: string) =>
     year: "numeric",
   });
 
-export default function Entry({ title, date, content }: Props) {
-  const [open, setOpen] = useState(false);
-
+export default function Entry({
+  title,
+  date,
+  content,
+  onDelete,
+  onEdit,
+  menuOpen,
+  onMenuToggle,
+}: Props) {
   return (
     <div className="card list">
       <div className="item-header">
@@ -34,11 +42,16 @@ export default function Entry({ title, date, content }: Props) {
         </div>
 
         <div className="item-menu">
-          <button onClick={() => setOpen((o) => !o)}>⋮</button>
-          {open && (
+          <button onClick={(e) => (e.stopPropagation(), onMenuToggle())}>
+            ⋮
+          </button>
+
+          {menuOpen && (
             <div className="menu-popup">
-              <button>Edit</button>
-              <button className="danger-text">Delete</button>
+              <button onClick={onEdit}>Edit</button>
+              <button className="danger-text" onClick={onDelete}>
+                Delete
+              </button>
             </div>
           )}
         </div>

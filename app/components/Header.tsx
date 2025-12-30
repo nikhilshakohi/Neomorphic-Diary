@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import "./../styles/header.css";
+import ProfileModal from "../modals/ProfileModal";
 
 const LIGHT = "light";
 const DARK = "dark";
@@ -11,6 +12,7 @@ export default function Header() {
   const [theme, setTheme] = useState(DARK);
   const isDark = theme === DARK;
   const { user, logout } = useAuth();
+  const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
     const asd = () => {
@@ -39,13 +41,16 @@ export default function Header() {
         </button>
         {user && (
           <>
-            <button>👤PROFILE</button>
+            <button onClick={() => setShowProfile(true)}>👤</button>
             <button className="danger-text" onClick={logout}>
               LOGOUT
             </button>
           </>
         )}
       </div>
+      {showProfile && user && (
+        <ProfileModal user={user} onClose={() => setShowProfile(false)} />
+      )}
     </header>
   );
 }
