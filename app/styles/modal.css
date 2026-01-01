@@ -1,21 +1,25 @@
 .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    backdrop-filter: blur(6px);
-    background: rgba(255, 255, 255, 0.15);
-    display: grid;
-    place-items: center;
-    z-index: 50;
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(6px);
+  background: rgba(255, 255, 255, 0.15);
+  display: grid;
+  place-items: center;
+  z-index: 50;
 }
 
 .modal-card {
-    width: 100%;
-    max-width: 640px;
-    background: var(--bg);
-    animation: slideUpEntry 0.5s ease-out;
-    padding: 20px;
+  width: 100%;
+  max-width: 640px;
+  background: var(--bg);
+  animation: slideUpEntry 0.5s ease-out;
+  padding: 20px;
 }
 
 .modal-card textarea {
-    overflow-y: auto;
+  overflow-y: auto;
+}
+
+.pin-card {
+  max-width: 350px;
 }

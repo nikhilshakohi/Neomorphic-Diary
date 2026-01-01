@@ -6,7 +6,8 @@ import {
   GoogleAuthProvider,
   updateProfile,
 } from "firebase/auth";
-import { auth } from "../lib/firebase";
+import { auth, db } from "../lib/firebase";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -40,13 +41,32 @@ export async function signupWithEmail(
     const cred = await createUserWithEmailAndPassword(auth, email, password);
     // Set display name
     await updateProfile(cred.user, { displayName: name });
+    await setDoc(
+      doc(db, "users", cred.user.uid),
+      {
+        email: cred.user.email,
+        pinStatus: "",
+        createdAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
   } catch (err: unknown) {
     throw mapAuthError(err);
   }
 }
 
 export async function loginWithGoogle() {
-  await signInWithPopup(auth, googleProvider);
+  const cred = await signInWithPopup(auth, googleProvider);
+
+  await setDoc(
+    doc(db, "users", cred.user.uid),
+    {
+      email: cred.user.email,
+      pinStatus: "",
+      createdAt: serverTimestamp(),
+    },
+    { merge: true }
+  );
 }
 
 function mapAuthError(err: unknown): Error {

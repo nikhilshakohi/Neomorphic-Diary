@@ -36,7 +36,7 @@ export default function Entry({
           <div className="item-icon">🕘</div>
 
           <div>
-            <div className="text-lg font-semibold capitalize">{title}</div>
+            <div className="text-lg font-semibold uppercase">{title}</div>
             <div className="text-xs opacity-70">{formatDate(date)}</div>
           </div>
         </div>

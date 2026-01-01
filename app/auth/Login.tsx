@@ -3,6 +3,7 @@ import "./../styles/auth.css";
 import useToggle from "../hooks/useToggle";
 import { useAuth } from "../context/AuthContext";
 import Alert from "../components/Alert";
+import EyeButton from "../components/EyeButton";
 
 export default function Login({ onSwitch }: { onSwitch: () => void }) {
   const [showPassword, togglePassword] = useToggle();
@@ -52,18 +53,12 @@ export default function Login({ onSwitch }: { onSwitch: () => void }) {
                 setError("");
               }}
             />
-            <button
-              type="button"
-              className="eye-btn fadeIcon"
-              onClick={togglePassword}
-            >
-              {showPassword ? "🙈" : "👁️"}
-            </button>
+            <EyeButton show={showPassword} onClick={togglePassword} />
           </div>
 
           {error && <Alert message={error} onClose={closeError} />}
 
-          <div className="flex justify-between mt-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-between mt-4">
             <button
               className="authButton"
               disabled={loading}

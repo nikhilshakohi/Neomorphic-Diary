@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
+import { PinProvider } from "./context/PinContext";
 
 export const metadata: Metadata = {
   title: "Diary",
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <PinProvider>{children}</PinProvider>
+        </AuthProvider>
       </body>
     </html>
   );

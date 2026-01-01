@@ -3,6 +3,7 @@ import "./../styles/auth.css";
 import useToggle from "../hooks/useToggle";
 import { useAuth } from "../context/AuthContext";
 import Alert from "../components/Alert";
+import EyeButton from "../components/EyeButton";
 
 export default function Signup({ onSwitch }: { onSwitch: () => void }) {
   const [showPassword, togglePassword] = useToggle();
@@ -75,13 +76,7 @@ export default function Signup({ onSwitch }: { onSwitch: () => void }) {
                 setError("");
               }}
             />
-            <button
-              type="button"
-              className="eye-btn fadeIcon"
-              onClick={togglePassword}
-            >
-              {showPassword ? "🙈" : "👁️"}
-            </button>
+            <EyeButton show={showPassword} onClick={togglePassword} />
           </div>
 
           <div className="relative">
@@ -96,13 +91,7 @@ export default function Signup({ onSwitch }: { onSwitch: () => void }) {
                 setError("");
               }}
             />
-            <button
-              type="button"
-              className="eye-btn fadeIcon"
-              onClick={toggleConfirm}
-            >
-              {showConfirm ? "🙈" : "👁️"}
-            </button>
+            <EyeButton show={showConfirm} onClick={toggleConfirm} />
           </div>
 
           {error && <Alert message={error} onClose={() => setError("")} />}

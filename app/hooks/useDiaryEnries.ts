@@ -17,6 +17,8 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
+import { usePin } from "../context/PinContext";
+import { db } from "../lib/firebase";
 
 export type DiaryEntry = {
   id: string;
@@ -29,7 +31,7 @@ const PAGE_SIZE = 10;
 
 export function useDiaryEntries() {
   const { user } = useAuth();
-  const db = getFirestore();
+  const { unlocked } = usePin();
 
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
   const [loading, setLoading] = useState(false);
@@ -38,7 +40,7 @@ export function useDiaryEntries() {
     useState<QueryDocumentSnapshot<DocumentData> | null>(null);
 
   useEffect(() => {
-    if (!user?.email) return;
+    if (!user?.email || !unlocked) return;
     setEntries([]);
     setLastDoc(null);
     setHasMore(true);
@@ -53,6 +55,7 @@ export function useDiaryEntries() {
     initial?: boolean;
     all?: boolean;
   }) => {
+    if (!unlocked) return;
     if (loading || (!hasMore && !initial && !all)) return;
 
     setLoading(true);

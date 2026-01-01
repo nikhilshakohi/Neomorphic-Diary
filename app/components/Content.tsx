@@ -20,7 +20,11 @@ export default function Content({ content }: Props) {
 
   return (
     <>
-      <div className="mt-2 text-md">{visibleContent}</div>
+      <div className="mt-2 text-md">
+        <pre className="whitespace-pre-wrap break-word font-sans">
+          {visibleContent}
+        </pre>
+      </div>
       <div className="mt-2 flex items-center gap-3 text-sm opacity-80">
         {charCount > CHAR_LIMIT && (
           <button
