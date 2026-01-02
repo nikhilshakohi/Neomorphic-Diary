@@ -6,6 +6,7 @@ type Props = {
   title: string;
   date: string;
   content: string;
+  highlight?: string;
   onDelete: () => void;
   onEdit: () => void;
   menuOpen: boolean;
@@ -24,6 +25,7 @@ export default function Entry({
   title,
   date,
   content,
+  highlight,
   onDelete,
   onEdit,
   menuOpen,
@@ -57,7 +59,7 @@ export default function Entry({
         </div>
       </div>
 
-      <Content content={content} />
+      <Content content={content} highlight={highlight} />
     </div>
   );
 }

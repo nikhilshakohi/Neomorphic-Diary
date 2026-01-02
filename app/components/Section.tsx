@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Greetings from "./Greetings";
 import "./../styles/section.css";
 import Inputs from "./Inputs";
-import Entry from "./Entry";
 import { useDiaryEntries } from "../hooks/useDiaryEnries";
 import ConfirmModal from "../modals/ConfirmModal";
 import EditModal from "../modals/EditModal";
+import EntryList from "./EntryList";
+import SearchPanel from "./SearchPanel";
+import ScrollToTopButton from "./ScrollToTopButton";
+import { useTypewriter } from "../hooks/useTypewriter";
 
 const LOADING_TEXT = "Bringing memories back ✨";
 
@@ -25,7 +28,7 @@ export default function Section() {
     updateEntry,
     deleteEntry,
   } = useDiaryEntries();
-  const [typed, setTyped] = useState("");
+
   const [editingEntry, setEditingEntry] = useState<null | {
     id: string;
     title: string;
@@ -33,25 +36,13 @@ export default function Section() {
     content: string;
   }>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [searching, setSearching] = useState(false);
+  const typed = useTypewriter(LOADING_TEXT, 40);
 
-  useEffect(() => {
-    if (!loading) return;
-
-    let i = 0;
-    const id = setInterval(() => {
-      setTyped(LOADING_TEXT.slice(0, (i += 2)));
-      if (i >= LOADING_TEXT.length) clearInterval(id);
-    }, 50);
-
-    return () => clearInterval(id);
-  }, [loading]);
-
-  useEffect(() => {
-    const closeMenu = () => setOpenMenuId(null);
-    window.addEventListener("click", closeMenu);
-    return () => window.removeEventListener("click", closeMenu);
-  }, []);
+  const handleSearch = async () => {
+    setSearching(true);
+    if (hasMore) await loadMore({ all: true });
+  };
 
   return (
     <div className="section">
@@ -59,39 +50,36 @@ export default function Section() {
         <Greetings />
         <div className="flex items-center gap-2 text-sm">
           <button>🗓️</button>
-          <button>🔎</button>
+          <button onClick={handleSearch}>🔎</button>
         </div>
       </div>
 
       <Inputs addEntry={addEntry} />
 
-      {entries.length === 0 && !loading ? (
-        <EmptyState />
-      ) : (
-        entries.map(({ id, title, date, content }) => (
-          <Entry
-            id={id}
-            key={id}
-            title={title}
-            date={date}
-            content={content}
-            onDelete={() => {
-              setOpenMenuId(null);
-              setConfirmDeleteId(id);
-            }}
-            onEdit={() => {
-              setOpenMenuId(null);
-              setEditingEntry({ id, title, date, content });
-            }}
-            menuOpen={openMenuId === id}
-            onMenuToggle={() =>
-              setOpenMenuId((prev) => (prev === id ? null : id))
-            }
+      {!searching &&
+        (entries.length === 0 && !loading ? (
+          <EmptyState />
+        ) : (
+          <EntryList
+            entries={entries}
+            onEdit={(entry) => setEditingEntry(entry)}
+            onDelete={(id) => setConfirmDeleteId(id)}
           />
-        ))
+        ))}
+
+      {searching && (
+        <SearchPanel
+          entries={entries}
+          loading={loading}
+          hasMore={hasMore}
+          loadAll={() => loadMore({ all: true })}
+          onClose={() => setSearching(false)}
+        />
       )}
 
-      {hasMore && (
+      <ScrollToTopButton />
+
+      {!searching && hasMore && (
         <div className="text-center mt-6 flex justify-center gap-3">
           <button
             className="authButton"
