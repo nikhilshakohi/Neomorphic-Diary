@@ -40,11 +40,15 @@ export default function SearchPanel({
   }, [query]);
 
   const results = debounced
-    ? entries.filter(
-        (e) =>
-          e.title.toLowerCase().includes(debounced) ||
-          e.content.toLowerCase().includes(debounced)
-      )
+    ? (() => {
+        const words = debounced.trim().toLowerCase().split(/\s+/);
+        return words.length
+          ? entries.filter((e) => {
+              const text = `${e.title} ${e.content}`.toLowerCase();
+              return words.every((w) => text.includes(w));
+            })
+          : [];
+      })()
     : [];
 
   return (

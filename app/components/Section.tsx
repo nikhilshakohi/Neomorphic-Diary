@@ -9,6 +9,7 @@ import EntryList from "./EntryList";
 import SearchPanel from "./SearchPanel";
 import ScrollToTopButton from "./ScrollToTopButton";
 import { useTypewriter } from "../hooks/useTypewriter";
+import OnThisDayPanel from "./OnThisDayPanel";
 
 const LOADING_TEXT = "Bringing memories back ✨";
 
@@ -36,12 +37,16 @@ export default function Section() {
     content: string;
   }>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
-  const [searching, setSearching] = useState(false);
+  const [mode, setMode] = useState<"normal" | "search" | "onThisDay">("normal");
   const typed = useTypewriter(LOADING_TEXT, 40);
 
-  const handleSearch = async () => {
-    setSearching(true);
+  const ensureAllLoaded = async () => {
     if (hasMore) await loadMore({ all: true });
+  };
+
+  const toggleMode = (next: "onThisDay" | "search") => {
+    setMode((prev) => (prev === next ? "normal" : next));
+    ensureAllLoaded();
   };
 
   return (
@@ -49,14 +54,14 @@ export default function Section() {
       <div className="flex justify-between px-1.5">
         <Greetings />
         <div className="flex items-center gap-2 text-sm">
-          <button>🗓️</button>
-          <button onClick={handleSearch}>🔎</button>
+          <button onClick={() => toggleMode("onThisDay")}>🗓️</button>
+          <button onClick={() => toggleMode("search")}>🔎</button>
         </div>
       </div>
 
       <Inputs addEntry={addEntry} />
 
-      {!searching &&
+      {mode === "normal" &&
         (entries.length === 0 && !loading ? (
           <EmptyState />
         ) : (
@@ -67,19 +72,27 @@ export default function Section() {
           />
         ))}
 
-      {searching && (
+      {mode === "search" && (
         <SearchPanel
           entries={entries}
           loading={loading}
           hasMore={hasMore}
-          loadAll={() => loadMore({ all: true })}
-          onClose={() => setSearching(false)}
+          loadAll={ensureAllLoaded}
+          onClose={() => setMode("normal")}
+        />
+      )}
+
+      {mode === "onThisDay" && (
+        <OnThisDayPanel
+          entries={entries}
+          loading={loading}
+          onClose={() => setMode("normal")}
         />
       )}
 
       <ScrollToTopButton />
 
-      {!searching && hasMore && (
+      {mode === "normal" && hasMore && (
         <div className="text-center mt-6 flex justify-center gap-3">
           <button
             className="authButton"
@@ -100,6 +113,7 @@ export default function Section() {
           )}
         </div>
       )}
+
       {confirmDeleteId && (
         <ConfirmModal
           message="Are you sure you want to delete this entry?"

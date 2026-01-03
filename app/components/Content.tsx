@@ -21,14 +21,16 @@ export default function Content({ content, highlight }: Props) {
   function renderHighlighted(text: string, q?: string) {
     if (!q) return text;
 
-    const query = q.toLowerCase();
+    const words = q.trim().split(/\s+/);
+    if (!words.length) return text;
+
+    const re = new RegExp(`(${words.join("|")})`, "gi");
+
     return text
-      .split(new RegExp(`(${q})`, "gi"))
-      .map((p, i) =>
-        p.toLowerCase() === query ? <mark key={i}>{p}</mark> : p
-      );
+      .split(re)
+      .map((p, i) => (re.test(p) ? <mark key={i}>{p}</mark> : p));
   }
-    
+
   return (
     <>
       <div className="mt-2 text-md">

@@ -39,6 +39,7 @@ export default function Inputs({
   return (
     <div>
       <textarea
+        key={expanded ? "open" : "closed"}
         rows={2}
         placeholder="How was today?"
         value={form.content}
