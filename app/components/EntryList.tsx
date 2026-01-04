@@ -1,9 +1,10 @@
-import { useState } from "react";
 import Entry from "./Entry";
 import { DiaryEntry } from "../hooks/useDiaryEnries";
 
 type EntryListProps = {
   entries: DiaryEntry[];
+  openMenuId: string | null;
+  setOpenMenuId: React.Dispatch<React.SetStateAction<string | null>>;
   highlight?: string;
   onEdit?: (entry: DiaryEntry) => void;
   onDelete?: (id: string) => void;
@@ -11,12 +12,12 @@ type EntryListProps = {
 
 export default function EntryList({
   entries,
+  openMenuId,
+  setOpenMenuId,
   highlight,
   onEdit,
   onDelete,
 }: EntryListProps) {
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-
   return (
     <>
       {entries.map((e) => (
