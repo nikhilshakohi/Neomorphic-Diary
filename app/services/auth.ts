@@ -19,7 +19,16 @@ export async function loginWithEmail(email: string, password: string) {
     throw new Error("Please enter a valid email");
   }
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    const cred = await signInWithEmailAndPassword(auth, email, password);
+    await setDoc(
+      doc(db, "users", cred.user.uid),
+      {
+        email: cred.user.email,
+        pinStatus: "NEW",
+        lastLoginAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
   } catch (err: unknown) {
     throw mapAuthError(err);
   }
@@ -45,7 +54,7 @@ export async function signupWithEmail(
       doc(db, "users", cred.user.uid),
       {
         email: cred.user.email,
-        pinStatus: "",
+        pinStatus: "NEW",
         createdAt: serverTimestamp(),
       },
       { merge: true }
@@ -62,8 +71,7 @@ export async function loginWithGoogle() {
     doc(db, "users", cred.user.uid),
     {
       email: cred.user.email,
-      pinStatus: "",
-      createdAt: serverTimestamp(),
+      lastLoginAt: serverTimestamp(),
     },
     { merge: true }
   );

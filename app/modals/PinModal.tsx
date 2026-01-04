@@ -6,15 +6,16 @@ import useToggle from "../hooks/useToggle";
 import { usePin } from "../context/PinContext";
 import { useAuth } from "../context/AuthContext";
 import { useUserPin } from "../hooks/useUserPin";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../lib/firebase";
 import Alert from "../components/Alert";
-import { hashPin } from "@/utils/pin";
 import EyeButton from "../components/EyeButton";
+import ConfirmModal from "./ConfirmModal";
+import { useTypewriter } from "../hooks/useTypewriter";
+import { createPin, resetPin, verifyPin } from "../services/pin";
 
 export default function PinModal() {
   const { unlock } = usePin();
   const { user, logout } = useAuth();
+  const name = user?.displayName || user?.email?.split("@")[0] || "there";
 
   const [showPin, togglePin] = useToggle();
   const [showConfirm, toggleConfirm] = useToggle();
@@ -22,6 +23,12 @@ export default function PinModal() {
   const [pin, setPin] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
+  const [confirmReset, setConfirmReset] = useState(false);
+  const [resetting, setResetting] = useState(false);
+  const resettingText = useTypewriter(
+    resetting ? "Resetting your PIN…" : "",
+    25
+  );
 
   const pinData = useUserPin();
   if (!pinData) return null;
@@ -33,21 +40,25 @@ export default function PinModal() {
     if (!pin) return setError("🔢 Enter your PIN");
     if (isNew && pin !== confirm) return setError("❌ PINs don't match");
 
-    const hashed = await hashPin(pin);
-
     if (!isNew) {
-      if (hashed !== storedPin) return setError("❌ Incorrect PIN");
-
+      const ok = await verifyPin(pin, storedPin);
+      if (!ok) return setError("❌ Incorrect PIN");
       unlock();
       return;
     }
 
-    await updateDoc(doc(db, "users", user!.uid), {
-      pinStatus: "GEN",
-      pin: hashed,
-    });
-
+    await createPin(user!, pin);
     unlock();
+  }
+
+  async function handleForgotPin() {
+    if (!user) return;
+
+    setConfirmReset(false);
+    setResetting(true);
+
+    await resetPin(user);
+    await logout();
   }
 
   return (
@@ -56,6 +67,9 @@ export default function PinModal() {
         <h2 className="text-xl font-semibold mb-1">
           {isNew ? "🔐 Your Diary, Locked" : "🛡️ Welcome Back"}
         </h2>
+        <p className="text-sm opacity-60 mb-7">
+          Signed in as <strong>{name}</strong>
+        </p>
 
         <p className="opacity-70 text-sm mb-10">
           {isNew
@@ -95,13 +109,32 @@ export default function PinModal() {
 
         {error && <Alert message={error} onClose={() => setError("")} />}
 
+        {resetting && (
+          <p className="text-sm opacity-60 mt-6 text-center">{resettingText}</p>
+        )}
+
         <div className="flex justify-between mt-10">
           <button onClick={submit}>Unlock 🔓</button>
-          <button className="danger-text" onClick={logout}>
-            Forgot PIN?
+          <button
+            className="danger-text"
+            disabled={resetting}
+            onClick={() => {
+              if (isNew) logout();
+              else setConfirmReset(true);
+            }}
+          >
+            {resetting ? "Resetting…" : isNew ? "Logout" : "Forgot PIN?"}
           </button>
         </div>
       </div>
+
+      {confirmReset && (
+        <ConfirmModal
+          message="This will log you out and require you to set a new PIN after signing in again."
+          onConfirm={handleForgotPin}
+          onCancel={() => setConfirmReset(false)}
+        />
+      )}
     </div>
   );
 }

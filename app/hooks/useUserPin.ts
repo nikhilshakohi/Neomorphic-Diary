@@ -1,4 +1,4 @@
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../lib/firebase";
 import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
@@ -17,6 +17,10 @@ export function useUserPin() {
       const snap = await getDoc(doc(db, "users", user.uid));
 
       if (!snap.exists()) {
+        await setDoc(doc(db, "users", user.uid), {
+          email: user.email,
+          pinStatus: "NEW",
+        });
         setState({ status: "NEW" });
         return;
       }
