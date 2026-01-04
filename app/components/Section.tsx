@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Greetings from "./Greetings";
 import "./../styles/section.css";
 import Inputs from "./Inputs";
@@ -40,14 +40,7 @@ export default function Section() {
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [mode, setMode] = useState<"normal" | "search" | "onThisDay">("normal");
   const typed = useTypewriter(LOADING_TEXT, 40);
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const closeMenu = () => setOpenMenuId(null);
-    window.addEventListener("click", closeMenu);
-    return () => window.removeEventListener("click", closeMenu);
-  }, []);
-
+  
   const ensureAllLoaded = async () => {
     if (hasMore) await loadMore({ all: true });
   };
@@ -79,8 +72,6 @@ export default function Section() {
             entries={entries}
             onEdit={(entry) => setEditingEntry(entry)}
             onDelete={(id) => setConfirmDeleteId(id)}
-            openMenuId={openMenuId}
-            setOpenMenuId={setOpenMenuId}
           />
         ))}
 

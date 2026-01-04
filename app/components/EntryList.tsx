@@ -1,10 +1,9 @@
 import Entry from "./Entry";
 import { DiaryEntry } from "../hooks/useDiaryEnries";
+import { useEffect, useState } from "react";
 
 type EntryListProps = {
   entries: DiaryEntry[];
-  openMenuId: string | null;
-  setOpenMenuId: React.Dispatch<React.SetStateAction<string | null>>;
   highlight?: string;
   onEdit?: (entry: DiaryEntry) => void;
   onDelete?: (id: string) => void;
@@ -12,12 +11,18 @@ type EntryListProps = {
 
 export default function EntryList({
   entries,
-  openMenuId,
-  setOpenMenuId,
   highlight,
   onEdit,
   onDelete,
 }: EntryListProps) {
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const close = () => setOpenMenuId(null);
+    window.addEventListener("click", close);
+    return () => window.removeEventListener("click", close);
+  }, []);
+
   return (
     <>
       {entries.map((e) => (
