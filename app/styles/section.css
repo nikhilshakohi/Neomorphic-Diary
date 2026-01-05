@@ -27,3 +27,7 @@ textarea {
 .meta-box {
     animation: expandDown 0.2s ease-in-out;
 }
+
+.searchCount {
+    animation: zoomPulse 0.35s ease-out;
+}

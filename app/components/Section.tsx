@@ -62,7 +62,7 @@ export default function Section() {
 
       <Inputs addEntry={addEntry} />
 
-      <StreakBadge />
+      {mode === "normal" && <StreakBadge />}
 
       {mode === "normal" &&
         (entries.length === 0 && !loading ? (
