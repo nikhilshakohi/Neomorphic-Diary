@@ -12,6 +12,8 @@ type Props = {
   onClose: () => void;
 };
 
+const TODAY = new Date().toISOString().slice(0, 10);
+
 export default function SearchPanel({
   entries,
   loading,
@@ -48,10 +50,9 @@ export default function SearchPanel({
 
   const toggleFilters = () => {
     setShowFilters((prev) => {
-      if (prev) {
-        setFromDate(null);
-        setToDate(null);
-      }
+      const value = prev ? null : TODAY;
+      setFromDate(value);
+      setToDate(value);
       return !prev;
     });
   };
