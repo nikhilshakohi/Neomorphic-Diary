@@ -31,3 +31,17 @@ textarea {
 .searchCount {
     animation: zoomPulse 0.35s ease-out;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+
+.highlight {
+    animation: zoomPulse 0.8s ease-out 0.7s 1;
+}

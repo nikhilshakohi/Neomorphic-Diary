@@ -30,7 +30,11 @@ const computeStreaks = (dates: string[]) => {
 
 export const useStreak = () => {
   const { user } = useAuth();
-  const [streak, setStreak] = useState({ current: 0, max: 0 });
+  const [streak, setStreak] = useState({
+    current: 0,
+    max: 0,
+    dates: [] as string[],
+  });
 
   useEffect(() => {
     if (!user?.email) return;
@@ -41,9 +45,11 @@ export const useStreak = () => {
         where("email", "==", user.email),
         orderBy("contentDate", "desc")
       )
-    ).then((snap) =>
-      setStreak(computeStreaks(snap.docs.map((d) => d.data().contentDate)))
-    );
+    ).then((snap) => {
+      const dates = snap.docs.map((d) => d.data().contentDate);
+      const { current, max } = computeStreaks(dates);
+      setStreak({ current, max, dates });
+    });
   }, [user?.email]);
 
   return streak;
