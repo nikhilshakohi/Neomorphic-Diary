@@ -16,7 +16,13 @@ const fmtTitle = (iso: string) => {
   return `${day}-${month}-${year} (${weekday})`;
 };
 
-export default function StreakCalendar({ dates }: { dates: string[] }) {
+export default function StreakCalendar({
+  dates,
+  onSelectDate,
+}: {
+  dates: string[];
+  onSelectDate: (date: string) => void;
+}) {
   const active = new Set(dates);
   const scrollerRef = useRef<HTMLDivElement>(null);
 
@@ -83,7 +89,8 @@ export default function StreakCalendar({ dates }: { dates: string[] }) {
                 <div
                   key={d ?? i}
                   title={d ? fmtTitle(d) : ""}
-                  className={`h-3 w-3 rounded-sm ${
+                  onClick={() => d && onSelectDate(d)}
+                  className={`h-3 w-3 rounded-sm cursor-pointer ${
                     d
                       ? active.has(d)
                         ? "bg-green-500"

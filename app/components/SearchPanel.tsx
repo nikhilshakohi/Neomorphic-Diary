@@ -10,6 +10,7 @@ type Props = {
   hasMore: boolean;
   loadAll: () => Promise<void>;
   onClose: () => void;
+  presetDate?: string | null;
 };
 
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -20,12 +21,15 @@ export default function SearchPanel({
   hasMore,
   loadAll,
   onClose,
+  presetDate,
 }: Props) {
   const [query, setQuery] = useState("");
   const [debounced, setDebounced] = useState("");
-  const [showFilters, setShowFilters] = useState(false);
-  const [fromDate, setFromDate] = useState<string | null>(null);
-  const [toDate, setToDate] = useState<string | null>(null);
+  const [showFilters, setShowFilters] = useState(() => Boolean(presetDate));
+  const [fromDate, setFromDate] = useState<string | null>(
+    () => presetDate ?? null
+  );
+  const [toDate, setToDate] = useState<string | null>(() => presetDate ?? null);
   const hasActiveFilter =
     Boolean(debounced) || Boolean(fromDate) || Boolean(toDate);
 

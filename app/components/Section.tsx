@@ -40,7 +40,8 @@ export default function Section() {
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [mode, setMode] = useState<"normal" | "search" | "onThisDay">("normal");
   const typed = useTypewriter(LOADING_TEXT, 40);
-  
+  const [searchPresetDate, setSearchPresetDate] = useState<string | null>(null);
+
   const ensureAllLoaded = async () => {
     if (hasMore) await loadMore({ all: true });
   };
@@ -62,7 +63,15 @@ export default function Section() {
 
       <Inputs addEntry={addEntry} />
 
-      {mode === "normal" && <StreakBadge />}
+      {mode === "normal" && (
+        <StreakBadge
+          onDateClick={(date) => {
+            setSearchPresetDate(date);
+            setMode("search");
+            ensureAllLoaded();
+          }}
+        />
+      )}
 
       {mode === "normal" &&
         (entries.length === 0 && !loading ? (
@@ -81,7 +90,11 @@ export default function Section() {
           loading={loading}
           hasMore={hasMore}
           loadAll={ensureAllLoaded}
-          onClose={() => setMode("normal")}
+          presetDate={searchPresetDate}
+          onClose={() => {
+            setSearchPresetDate(null);
+            setMode("normal");
+          }}
         />
       )}
 
