@@ -1,3 +1,4 @@
+import { MoodKey, MOODS } from "../constants/mood";
 import "./../styles/entry.css";
 import Content from "./Content";
 
@@ -6,6 +7,7 @@ type Props = {
   title: string;
   date: string;
   content: string;
+  moods: MoodKey[];
   highlight?: string;
   onDelete: () => void;
   onEdit: () => void;
@@ -25,6 +27,7 @@ export default function Entry({
   title,
   date,
   content,
+  moods,
   highlight,
   onDelete,
   onEdit,
@@ -58,6 +61,20 @@ export default function Entry({
           )}
         </div>
       </div>
+
+      {moods.length > 0 && (
+        <div className="flex gap-1 my-2 cursor-pointer">
+          {moods.map((m) => (
+            <span
+              key={m}
+              title={m[0].toUpperCase() + m.slice(1)}
+              className="emoji"
+            >
+              {MOODS[m]}
+            </span>
+          ))}
+        </div>
+      )}
 
       <Content content={content} highlight={highlight} />
     </div>

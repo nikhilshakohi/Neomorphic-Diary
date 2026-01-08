@@ -1,6 +1,9 @@
 import { useCallback, useState } from "react";
 import { createEntry } from "../services/entries";
 import Alert from "./Alert";
+import { MoodKey } from "../constants/mood";
+import MoodPicker from "./MoodPicker";
+import { useMoods } from "../hooks/useMoods";
 
 export default function Inputs({
   addEntry,
@@ -9,12 +12,14 @@ export default function Inputs({
     title: string;
     content: string;
     date: string;
+    moods: MoodKey[];
   }) => Promise<void>;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const closeError = useCallback(() => setError(""), []);
+  const { moods, toggleMood, resetMoods } = useMoods();
 
   const [form, setForm] = useState({
     title: "",
@@ -25,7 +30,8 @@ export default function Inputs({
   const handleAdd = async () => {
     setSaving(true);
     try {
-      await createEntry(form, addEntry);
+      await createEntry({ ...form, moods }, addEntry);
+      resetMoods();
       setForm({ ...form, title: "", content: "" });
       setExpanded(false);
       setError("");
@@ -54,7 +60,7 @@ export default function Inputs({
 
       {expanded && (
         <div className="meta-box">
-          <div className="meta-input">
+          <div className="meta-input mb-2">
             <input
               type="date"
               value={form.date}
@@ -67,6 +73,7 @@ export default function Inputs({
               onChange={(e) => setForm({ ...form, title: e.target.value })}
             />
           </div>
+          <MoodPicker moods={moods} onToggle={toggleMood} />
 
           {error && <Alert message={error} onClose={closeError} />}
 

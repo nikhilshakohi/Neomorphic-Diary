@@ -19,12 +19,14 @@ import {
 import { useAuth } from "../context/AuthContext";
 import { usePin } from "../context/PinContext";
 import { db } from "../lib/firebase";
+import { MoodKey } from "../constants/mood";
 
 export type DiaryEntry = {
   id: string;
   title: string;
   date: string;
   content: string;
+  moods: MoodKey[];
 };
 
 const PAGE_SIZE = 10;
@@ -75,6 +77,7 @@ export function useDiaryEntries() {
       title: doc.data().contentTitle,
       date: doc.data().contentDate,
       content: doc.data().contentDetails,
+      moods: doc.data().moods ?? [],
     }));
 
     setEntries((prev) => (initial ? newEntries : [...prev, ...newEntries]));
@@ -87,10 +90,12 @@ export function useDiaryEntries() {
     title,
     date,
     content,
+    moods,
   }: {
     title: string;
     date: string;
     content: string;
+    moods: MoodKey[];
   }) => {
     if (!user?.email || !content.trim()) return;
 
@@ -99,16 +104,12 @@ export function useDiaryEntries() {
       contentTitle: title,
       contentDate: date,
       contentDetails: content,
+      moods,
       createdAt: serverTimestamp(),
     });
 
     setEntries((prev) => [
-      {
-        id: docRef.id,
-        title,
-        date,
-        content,
-      },
+      { id: docRef.id, title, date, content, moods },
       ...prev,
     ]);
   };
@@ -118,22 +119,25 @@ export function useDiaryEntries() {
     title,
     date,
     content,
+    moods,
   }: {
     id: string;
     title: string;
     date: string;
     content: string;
+    moods: MoodKey[];
   }) => {
     if (!user?.email) return;
 
     setEntries((prev) =>
-      prev.map((e) => (e.id === id ? { ...e, title, date, content } : e))
+      prev.map((e) => (e.id === id ? { ...e, title, date, content, moods } : e))
     );
 
     await updateDoc(doc(db, "contents", id), {
       contentTitle: title,
       contentDate: date,
       contentDetails: content,
+      moods,
       updatedAt: serverTimestamp(),
     });
   };

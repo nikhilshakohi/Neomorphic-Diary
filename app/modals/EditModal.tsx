@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import "./../styles/modal.css";
+import { MoodKey } from "../constants/mood";
+import MoodPicker from "../components/MoodPicker";
+import { useMoods } from "../hooks/useMoods";
 
 export default function EditModal({
   entry,
@@ -11,12 +14,14 @@ export default function EditModal({
     title: string;
     date: string;
     content: string;
+    moods: MoodKey[];
   };
   onSave: (e: typeof entry) => Promise<void>;
   onClose: () => void;
 }) {
   const [form, setForm] = useState(entry);
   const [saving, setSaving] = useState(false);
+  const { moods, toggleMood } = useMoods(entry.moods);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -55,12 +60,14 @@ export default function EditModal({
           />
         </div>
 
+        <MoodPicker moods={moods} onToggle={toggleMood} />
+
         <div className="flex justify-end gap-3 mt-5">
           <button
             disabled={saving}
             onClick={async () => {
               setSaving(true);
-              await onSave(form);
+              await onSave({ ...form, moods });
               setSaving(false);
             }}
           >

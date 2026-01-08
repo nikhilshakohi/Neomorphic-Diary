@@ -1,7 +1,10 @@
+import { MoodKey } from "../constants/mood";
+
 type EntryPayload = {
   title: string;
   date: string;
   content: string;
+  moods: MoodKey[];
 };
 
 export async function createEntry(

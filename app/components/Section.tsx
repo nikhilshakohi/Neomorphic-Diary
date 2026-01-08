@@ -11,6 +11,7 @@ import ScrollToTopButton from "./ScrollToTopButton";
 import { useTypewriter } from "../hooks/useTypewriter";
 import OnThisDayPanel from "./OnThisDayPanel";
 import StreakBadge from "./StreakBadge";
+import { MoodKey } from "../constants/mood";
 
 const LOADING_TEXT = "Bringing memories back ✨";
 
@@ -36,6 +37,7 @@ export default function Section() {
     title: string;
     date: string;
     content: string;
+    moods: MoodKey[];
   }>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [mode, setMode] = useState<"normal" | "search" | "onThisDay">("normal");

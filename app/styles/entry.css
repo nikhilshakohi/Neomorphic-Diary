@@ -45,3 +45,7 @@
     padding: 6px 10px;
     margin: 5px;
 }
+
+.emoji:hover {
+    transform: scale(1.5);
+}
