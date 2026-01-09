@@ -2,8 +2,8 @@ import { useState } from "react";
 import "./../styles/auth.css";
 import useToggle from "../hooks/useToggle";
 import { useAuth } from "../context/AuthContext";
-import Alert from "../components/Alert";
-import EyeButton from "../components/EyeButton";
+import Alert from "../components/common/Alert";
+import EyeButton from "../components/common/EyeButton";
 
 export default function Signup({ onSwitch }: { onSwitch: () => void }) {
   const [showPassword, togglePassword] = useToggle();

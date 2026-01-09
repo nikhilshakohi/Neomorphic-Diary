@@ -1,5 +1,5 @@
-import { MoodKey, MOODS } from "../constants/mood";
-import "./../styles/entry.css";
+import { MoodKey, MOODS } from "../../constants/mood";
+import "./../../styles/entry.css";
 import Content from "./Content";
 
 type Props = {

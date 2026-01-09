@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./../styles/modal.css";
 import { MoodKey } from "../constants/mood";
-import MoodPicker from "../components/MoodPicker";
+import MoodPicker from "../components/diary/MoodPicker";
 import { useMoods } from "../hooks/useMoods";
 
 export default function EditModal({

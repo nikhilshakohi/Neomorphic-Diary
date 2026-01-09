@@ -1,17 +1,17 @@
 import { useState } from "react";
-import Greetings from "./Greetings";
+import Greetings from "../components/layout/Greetings";
 import "./../styles/section.css";
-import Inputs from "./Inputs";
+import Inputs from "../components/diary/Inputs";
 import { useDiaryEntries } from "../hooks/useDiaryEnries";
 import ConfirmModal from "../modals/ConfirmModal";
 import EditModal from "../modals/EditModal";
-import EntryList from "./EntryList";
-import SearchPanel from "./SearchPanel";
-import ScrollToTopButton from "./ScrollToTopButton";
+import EntryList from "../components/diary/EntryList";
+import SearchPanel from "../components/search/SearchPanel";
+import ScrollToTopButton from "../components/layout/ScrollToTopButton";
 import { useTypewriter } from "../hooks/useTypewriter";
-import OnThisDayPanel from "./OnThisDayPanel";
-import StreakBadge from "./StreakBadge";
+import StreakBadge from "../components/streak/StreakBadge";
 import { MoodKey } from "../constants/mood";
+import OnThisDayPanel from "../components/search/OnThisDayPanel";
 
 const LOADING_TEXT = "Bringing memories back ✨";
 

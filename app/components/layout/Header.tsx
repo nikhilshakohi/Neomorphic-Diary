@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
-import "./../styles/header.css";
-import ProfileModal from "../modals/ProfileModal";
+import "./../../styles/header.css";
+import ProfileModal from "@/app/modals/ProfileModal";
+import { useAuth } from "@/app/context/AuthContext";
 
 const LIGHT = "light";
 const DARK = "dark";

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MOODS, MoodKey } from "../constants/mood";
+import { MOODS, MoodKey } from "../../constants/mood";
 
 export default function MoodPicker({
   moods,

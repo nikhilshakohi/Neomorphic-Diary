@@ -1,6 +1,6 @@
-import Entry from "./Entry";
-import { DiaryEntry } from "../hooks/useDiaryEnries";
+import { DiaryEntry } from "../../hooks/useDiaryEnries";
 import { useEffect, useState } from "react";
+import Entry from "./Entry";
 
 type EntryListProps = {
   entries: DiaryEntry[];

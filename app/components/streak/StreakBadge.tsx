@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useStreak } from "../hooks/useStreak";
+import { useStreak } from "../../hooks/useStreak";
 import StreakCalendar from "./StreakCalendar";
 
 export default function StreakBadge({

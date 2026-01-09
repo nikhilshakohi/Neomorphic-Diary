@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
-import { createEntry } from "../services/entries";
-import Alert from "./Alert";
-import { MoodKey } from "../constants/mood";
+import { createEntry } from "../../services/entries";
+import Alert from "../common/Alert";
+import { MoodKey } from "../../constants/mood";
 import MoodPicker from "./MoodPicker";
-import { useMoods } from "../hooks/useMoods";
+import { useMoods } from "../../hooks/useMoods";
 
 export default function Inputs({
   addEntry,

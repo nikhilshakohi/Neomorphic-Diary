@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import "./../styles/entry.css";
+import "./../../styles/entry.css";
 
 type Props = { content: string; highlight?: string };
 

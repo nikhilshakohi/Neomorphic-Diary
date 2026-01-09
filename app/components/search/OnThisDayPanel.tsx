@@ -1,6 +1,6 @@
-import EntryList from "./EntryList";
-import { DiaryEntry } from "../hooks/useDiaryEnries";
-import { useTypewriter } from "../hooks/useTypewriter";
+import { DiaryEntry } from "@/app/hooks/useDiaryEnries";
+import { useTypewriter } from "@/app/hooks/useTypewriter";
+import EntryList from "../diary/EntryList";
 
 type Props = {
   entries: DiaryEntry[];

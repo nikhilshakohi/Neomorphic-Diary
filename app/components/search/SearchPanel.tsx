@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import EntryList from "./EntryList";
-import { DiaryEntry } from "../hooks/useDiaryEnries";
-import { useTypewriter } from "../hooks/useTypewriter";
+import EntryList from "../diary/EntryList";
+import { DiaryEntry } from "../../hooks/useDiaryEnries";
+import { useTypewriter } from "../../hooks/useTypewriter";
 import FilterPanel from "./FilterPanel";
 
 type Props = {
