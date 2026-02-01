@@ -5,6 +5,8 @@ import { MoodKey } from "../../constants/mood";
 import MoodPicker from "./MoodPicker";
 import { useMoods } from "../../hooks/useMoods";
 
+const STORAGE_KEY = "entry-draft";
+
 export default function Inputs({
   addEntry,
 }: {
@@ -23,7 +25,7 @@ export default function Inputs({
 
   const [form, setForm] = useState({
     title: "",
-    content: "",
+    content: localStorage.getItem(STORAGE_KEY) ?? "",
     date: new Date().toISOString().slice(0, 10),
   });
 
@@ -33,6 +35,7 @@ export default function Inputs({
       await createEntry({ ...form, moods }, addEntry);
       resetMoods();
       setForm({ ...form, title: "", content: "" });
+      localStorage.removeItem(STORAGE_KEY);
       setExpanded(false);
       setError("");
     } catch (e) {
@@ -50,7 +53,11 @@ export default function Inputs({
         placeholder="How was today?"
         value={form.content}
         onFocus={() => setExpanded(true)}
-        onChange={(e) => setForm({ ...form, content: e.target.value })}
+        onChange={(e) => {
+          const value = e.target.value;
+          localStorage.setItem(STORAGE_KEY, value);
+          setForm({ ...form, content: value });
+        }}
         onInput={(e) => {
           const el = e.currentTarget;
           el.style.height = "auto";
