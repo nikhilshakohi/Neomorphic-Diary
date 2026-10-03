@@ -79,6 +79,9 @@
 
 .entry-history-items > div {
     position: relative;
+    display: grid;
+    grid-template-columns: 4.8em 1fr;
+    gap: 6px;
 }
 
 .entry-history-items .entry-history-current::before {

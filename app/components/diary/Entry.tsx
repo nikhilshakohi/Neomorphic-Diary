@@ -28,7 +28,10 @@ const formatHistoryDate = (value: string) => {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();
   const weekday = date.toLocaleDateString("en-GB", { weekday: "long" });
-  return `${day}-${month}-${year} (${weekday})`;
+  const time = dateOnly
+    ? ""
+    : ` · ${date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}`;
+  return `${day}-${month}-${year} (${weekday})${time}`;
 };
 
 const formatDate = (date: string) =>
@@ -55,11 +58,13 @@ export default function Entry({
   const [historyOpen, setHistoryOpen] = useState(false);
   const history = [
     ...[...editHistory].reverse().map((editedAt) => ({
-      label: `Edited: ${formatHistoryDate(editedAt)}`,
+      action: "Edited",
+      date: formatHistoryDate(editedAt),
       key: editedAt,
     })),
     {
-      label: `Created: ${formatHistoryDate(createdAt ?? date)}`,
+      action: "Created",
+      date: formatHistoryDate(createdAt ?? date),
       key: "created",
     },
   ];
@@ -122,7 +127,10 @@ export default function Entry({
                 key={`${item.key}-${index}`}
                 className={index === 0 ? "entry-history-current" : undefined}
               >
-                {item.label}
+                <>
+                  <span>{item.action}:</span>
+                  <span>{item.date}</span>
+                </>
               </div>
             ))}
           </div>
