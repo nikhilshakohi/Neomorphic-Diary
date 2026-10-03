@@ -24,7 +24,6 @@ export async function loginWithEmail(email: string, password: string) {
       doc(db, "users", cred.user.uid),
       {
         email: cred.user.email,
-        pinStatus: "NEW",
         lastLoginAt: serverTimestamp(),
       },
       { merge: true }

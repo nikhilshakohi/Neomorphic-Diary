@@ -1,7 +1,28 @@
-import { doc, updateDoc } from "firebase/firestore";
+import type { User } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { db } from "../lib/firebase";
 import { hashPin } from "@/utils/pin";
-import { User } from "firebase/auth";
+
+async function pinResetRequest(path: string, user: User, code?: string) {
+  const response = await fetch(path, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${await user.getIdToken()}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(code ? { code } : {}),
+  });
+  const result = (await response.json()) as { error?: string };
+  if (!response.ok) throw new Error(result.error ?? "PIN reset request failed.");
+}
+
+export function sendPinResetOtp(user: User) {
+  return pinResetRequest("/api/pin/send-otp", user);
+}
+
+export function verifyPinResetOtp(user: User, code: string) {
+  return pinResetRequest("/api/pin/verify-otp", user, code);
+}
 
 export async function verifyPin(inputPin: string, storedPin?: string) {
   if (!storedPin) return false;
@@ -10,16 +31,11 @@ export async function verifyPin(inputPin: string, storedPin?: string) {
 }
 
 export async function createPin(user: User, pin: string) {
+  if (!/^\d{4,6}$/.test(pin)) throw new Error("PIN must be 4 to 6 digits.");
   const hashed = await hashPin(pin);
-  await updateDoc(doc(db, "users", user.uid), {
-    pinStatus: "GEN",
-    pin: hashed,
-  });
-}
-
-export async function resetPin(user: User) {
-  await updateDoc(doc(db, "users", user.uid), {
-    pinStatus: "NEW",
-    pin: null,
-  });
+  await setDoc(
+    doc(db, "users", user.uid),
+    { email: user.email, pinStatus: "GEN", pin: hashed },
+    { merge: true }
+  );
 }

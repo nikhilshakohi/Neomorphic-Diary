@@ -23,3 +23,49 @@
 .pin-card {
   max-width: 350px;
 }
+
+.pin-card .pin-unlock {
+  padding: 12px 22px;
+  background: #4f46e5;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 3px 3px 8px var(--dark), -2px -2px 8px var(--light);
+}
+
+.pin-card .pin-unlock:hover {
+  background: #4338ca;
+}
+
+.pin-card .pin-forgot {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  font-size: 0.875rem;
+  font-weight: 400;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  opacity: 0.65;
+}
+
+.pin-card .pin-forgot:hover,
+.pin-card .pin-forgot:active {
+  box-shadow: none;
+  opacity: 1;
+}
+
+.profile-lock {
+  opacity: 0.75;
+}
+
+.profile-lock:hover {
+  opacity: 1;
+}
+
+.pin-otp-input {
+  width: 100%;
+  max-width: 200px;
+  text-align: center;
+  letter-spacing: 0.4em;
+  font-variant-numeric: tabular-nums;
+}

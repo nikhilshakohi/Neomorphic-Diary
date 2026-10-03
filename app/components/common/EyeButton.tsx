@@ -6,7 +6,12 @@ export default function EyeButton({
   onClick: () => void;
 }) {
   return (
-    <button className="eye-btn fadeIcon" onClick={onClick}>
+    <button
+      type="button"
+      className="eye-btn fadeIcon"
+      aria-label={show ? "Hide PIN" : "Show PIN"}
+      onClick={onClick}
+    >
       {show ? "🙈" : "👁️"}
     </button>
   );

@@ -1,4 +1,5 @@
 import "./../styles/modal.css";
+import { usePin } from "../context/PinContext";
 
 export default function ProfileModal({
   user,
@@ -7,6 +8,8 @@ export default function ProfileModal({
   user: { displayName?: string | null; email?: string | null };
   onClose: () => void;
 }) {
+  const { lock } = usePin();
+
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-card card" onClick={(e) => e.stopPropagation()}>
@@ -28,7 +31,16 @@ export default function ProfileModal({
           </div>
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-3">
+          <button
+            className="profile-lock"
+            onClick={() => {
+              lock();
+              onClose();
+            }}
+          >
+            🔒 Lock diary
+          </button>
           <button onClick={onClose}>Got it 👍</button>
         </div>
       </div>
