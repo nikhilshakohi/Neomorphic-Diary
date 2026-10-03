@@ -43,6 +43,17 @@ export default function Section() {
   const [mode, setMode] = useState<"normal" | "search" | "onThisDay">("normal");
   const typed = useTypewriter(LOADING_TEXT, 40);
   const [searchPresetDate, setSearchPresetDate] = useState<string | null>(null);
+  const [streakRefreshKey, setStreakRefreshKey] = useState(0);
+
+  const handleAddEntry = async (entry: Parameters<typeof addEntry>[0]) => {
+    await addEntry(entry);
+    setStreakRefreshKey((key) => key + 1);
+  };
+
+  const refreshRecords = async () => {
+    await loadMore({ initial: true, all: true });
+    setStreakRefreshKey((key) => key + 1);
+  };
 
   const ensureAllLoaded = async () => {
     if (hasMore) await loadMore({ all: true });
@@ -63,10 +74,13 @@ export default function Section() {
         </div>
       </div>
 
-      <Inputs addEntry={addEntry} />
+      <Inputs addEntry={handleAddEntry} />
 
       {mode === "normal" && (
         <StreakBadge
+          refreshKey={streakRefreshKey}
+          refreshing={loading}
+          onRefresh={refreshRecords}
           onDateClick={(date) => {
             setSearchPresetDate(date);
             setMode("search");
