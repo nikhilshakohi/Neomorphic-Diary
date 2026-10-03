@@ -49,3 +49,45 @@
 .emoji:hover {
     transform: scale(1.5);
 }
+
+.history-toggle {
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    font: inherit;
+    opacity: 0.7;
+}
+
+.history-toggle:hover,
+.history-toggle:active {
+    box-shadow: none;
+}
+
+.entry-history {
+    margin-top: 8px;
+    color: var(--fg);
+    opacity: 0.48;
+    font-size: 12px;
+}
+
+.entry-history-items {
+    margin-left: 4px;
+    padding-left: 10px;
+    border-left: 1px dotted currentColor;
+    line-height: 1.7;
+}
+
+.entry-history-items > div {
+    position: relative;
+}
+
+.entry-history-items .entry-history-current::before {
+    position: absolute;
+    top: 0.55em;
+    left: -14px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    content: "";
+}

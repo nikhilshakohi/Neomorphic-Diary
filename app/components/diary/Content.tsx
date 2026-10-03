@@ -3,11 +3,23 @@
 import { useState } from "react";
 import "./../../styles/entry.css";
 
-type Props = { content: string; highlight?: string };
+type Props = {
+  content: string;
+  highlight?: string;
+  showHistory: boolean;
+  historyOpen: boolean;
+  onToggleHistory: () => void;
+};
 
 const CHAR_LIMIT = 180;
 
-export default function Content({ content, highlight }: Props) {
+export default function Content({
+  content,
+  highlight,
+  showHistory,
+  historyOpen,
+  onToggleHistory,
+}: Props) {
   const [expanded, setExpanded] = useState(false);
 
   const charCount = content.length;
@@ -48,6 +60,16 @@ export default function Content({ content, highlight }: Props) {
           </button>
         )}
         ({wordCount} words)
+        {showHistory && (
+          <button
+            type="button"
+            className="history-toggle"
+            aria-expanded={historyOpen}
+            onClick={onToggleHistory}
+          >
+            🕰️ History <span aria-hidden="true">{historyOpen ? "↑" : "↓"}</span>
+          </button>
+        )}
       </div>
     </>
   );

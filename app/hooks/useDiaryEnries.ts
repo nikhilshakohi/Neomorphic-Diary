@@ -11,10 +11,12 @@ import {
   QueryDocumentSnapshot,
   DocumentData,
   addDoc,
+  arrayUnion,
   serverTimestamp,
   deleteDoc,
   doc,
   updateDoc,
+  Timestamp,
 } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
 import { usePin } from "../context/PinContext";
@@ -27,6 +29,14 @@ export type DiaryEntry = {
   date: string;
   content: string;
   moods: MoodKey[];
+  createdAt?: string;
+  editHistory: string[];
+};
+
+const toIsoString = (value: unknown): string | undefined => {
+  if (value instanceof Timestamp) return value.toDate().toISOString();
+  if (value instanceof Date) return value.toISOString();
+  return typeof value === "string" ? value : undefined;
 };
 
 const PAGE_SIZE = 10;
@@ -62,28 +72,35 @@ export function useDiaryEntries() {
 
     setLoading(true);
 
-    const q = query(
-      collection(getFirestore(), "contents"),
-      where("email", "==", user!.email),
-      orderBy("contentDate", "desc"),
-      ...(lastDoc && !initial ? [startAfter(lastDoc)] : []),
-      ...(all ? [] : [limit(PAGE_SIZE)])
-    );
+    try {
+      const q = query(
+        collection(getFirestore(), "contents"),
+        where("email", "==", user!.email),
+        orderBy("contentDate", "desc"),
+        ...(lastDoc && !initial ? [startAfter(lastDoc)] : []),
+        ...(all ? [] : [limit(PAGE_SIZE)])
+      );
 
-    const snapshot = await getDocs(q);
+      const snapshot = await getDocs(q);
 
-    const newEntries = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      title: doc.data().contentTitle,
-      date: doc.data().contentDate,
-      content: doc.data().contentDetails,
-      moods: doc.data().moods ?? [],
-    }));
+      const newEntries = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        title: doc.data().contentTitle,
+        date: doc.data().contentDate,
+        content: doc.data().contentDetails,
+        moods: doc.data().moods ?? [],
+        createdAt: toIsoString(doc.data().createdAt),
+        editHistory: ((doc.data().editHistory ?? []) as unknown[])
+          .map(toIsoString)
+          .filter((value): value is string => Boolean(value)),
+      }));
 
-    setEntries((prev) => (initial ? newEntries : [...prev, ...newEntries]));
-    setLastDoc(snapshot.docs.at(-1) ?? null);
-    setHasMore(!all && snapshot.docs.length === PAGE_SIZE);
-    setLoading(false);
+      setEntries((prev) => (initial ? newEntries : [...prev, ...newEntries]));
+      setLastDoc(snapshot.docs.at(-1) ?? null);
+      setHasMore(!all && snapshot.docs.length === PAGE_SIZE);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const addEntry = async ({
@@ -109,7 +126,15 @@ export function useDiaryEntries() {
     });
 
     setEntries((prev) => [
-      { id: docRef.id, title, date, content, moods },
+      {
+        id: docRef.id,
+        title,
+        date,
+        content,
+        moods,
+        createdAt: new Date().toISOString(),
+        editHistory: [],
+      },
       ...prev,
     ]);
   };
@@ -133,13 +158,23 @@ export function useDiaryEntries() {
       prev.map((e) => (e.id === id ? { ...e, title, date, content, moods } : e))
     );
 
+    const editedAt = Timestamp.now();
     await updateDoc(doc(db, "contents", id), {
       contentTitle: title,
       contentDate: date,
       contentDetails: content,
       moods,
       updatedAt: serverTimestamp(),
+      editHistory: arrayUnion(editedAt),
     });
+
+    setEntries((prev) =>
+      prev.map((entry) =>
+        entry.id === id
+          ? { ...entry, editHistory: [...entry.editHistory, editedAt.toDate().toISOString()] }
+          : entry
+      )
+    );
   };
 
   const deleteEntry = async (id: string) => {
