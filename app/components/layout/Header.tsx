@@ -7,6 +7,7 @@ import { useAuth } from "@/app/context/AuthContext";
 
 const LIGHT = "light";
 const DARK = "dark";
+const SYSTEM = "system";
 
 export default function Header() {
   const [theme, setTheme] = useState(DARK);
@@ -15,18 +16,46 @@ export default function Header() {
   const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
-    const asd = () => {
-      const stored = localStorage.getItem("theme") || DARK;
-      setTheme(stored);
-      document.documentElement.setAttribute("data-theme", stored);
+    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
+    const applyTheme = (next: string) => {
+      setTheme(next);
+      document.documentElement.setAttribute("data-theme", next);
     };
-    asd();
+
+    const stored = localStorage.getItem("themePreference");
+    const savedPreference =
+      stored === LIGHT || stored === DARK ? stored : SYSTEM;
+    localStorage.removeItem("theme");
+    applyTheme(
+      savedPreference === SYSTEM
+        ? systemTheme.matches
+          ? DARK
+          : LIGHT
+        : savedPreference
+    );
+
+    const followSystem = (event: MediaQueryListEvent) => {
+      const preference = localStorage.getItem("themePreference");
+      if (preference === SYSTEM || !preference) {
+        applyTheme(event.matches ? DARK : LIGHT);
+      }
+    };
+    systemTheme.addEventListener("change", followSystem);
+    return () => systemTheme.removeEventListener("change", followSystem);
   }, []);
 
   function toggleTheme() {
-    const next = theme === DARK ? LIGHT : DARK;
+    const preference = localStorage.getItem("themePreference") || SYSTEM;
+    const nextPreference =
+      preference === SYSTEM ? (theme === DARK ? LIGHT : DARK) : SYSTEM;
+    const next =
+      nextPreference === SYSTEM
+        ? window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? DARK
+          : LIGHT
+        : nextPreference;
     setTheme(next);
-    localStorage.setItem("theme", next);
+    localStorage.setItem("themePreference", nextPreference);
     document.documentElement.setAttribute("data-theme", next);
   }
   return (
